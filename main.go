@@ -5,6 +5,9 @@ import (
 	"log"
 )
 
+//this variable ouside function' scope is entire package
+var s = "seven"
+
 func main() {
 
 	// we will manipulate some basic functions and features of go lang
@@ -39,6 +42,11 @@ func main() {
 	//Note: there is no return in the function but this happens only because the memory value is changed
 	log.Println("the new value of myPointerString after the pointer function is", myPointerString)
 
+	//saysomething function
+
+	sayValue, sayValue2 := saySomething("xxx")
+	log.Println("the output of the saysomething funtion is", sayValue, sayValue2)
+
 }
 
 // it is returning string but it can return more than 1 values by sepearting the types by comma like string, string
@@ -58,4 +66,15 @@ func changeUsingPointer(s *string) {
 	//now set the new value in the location by applying * before the string.
 	*s = newValue
 	// Note: -  That we are not returning anything but just changing the value in the memory location
+}
+
+// now the same "s" is a variable in the package scope and we are getting a value of s in function
+// passing value to this function in main function
+func saySomething(s string) (string, string) {
+	//the value of package scope variable is overwritern when passing the value to the function
+	//if the variable name in function is changed like "s to s2"
+	//than value of s will be the value of variable in package scope
+	log.Println("the value of s in saysomething function is", s)
+	return s, "world"
+
 }
