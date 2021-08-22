@@ -1,71 +1,72 @@
 package main
 
-import (
-	"log"
-)
+import "fmt"
+
+//Interfaces
+///type interface with methods
+type Animal interface {
+	Says() string
+	NumberOfLegs() int
+}
+
+type Dog struct {
+	name  string
+	breed string
+}
+type Gorilla struct {
+	name          string
+	numberOfTeeth int
+	color         string
+}
 
 func main() {
-	//loops and range
-	//loops
-	for i := 0; i < 7; i++ {
-		if i%2 == 0 {
-			log.Println(i)
-		}
+
+	dog := Dog{
+		name:  "Tommy",
+		breed: "German",
 	}
+	//dog does not suffice the requiremnets so we create another 2 functions fro say and number of legs
+	// add & because we are passing the pointer reference to the below function
+	fmt.Println(dog.name)
+	printInfo(&dog)
 
-	//**Range with slice
+	//the value of name can be changed in the below function where I pass the pointer value
+	fmt.Println(dog.name)
 
-	animals := []string{"dog", "fish", "Riaan", "horse"}
-	// i will print the index and animal will print one by one range in animal
-
-	//for i, animal := range animals {
-	// _ is used to keep the variable as blank and ignore so that Go do not throw an error
-	for _, animal := range animals {
-		//log.Println(i, animal)
-		log.Println(animal)
+	gorilla := Gorilla{
+		//	name:          "GoriallaName",
+		///	color:         "blue",
+		//numberOfTeeth: 45,
 	}
+	//if we add & while sending value to function, the function can take pointers or value based on what we give
+	printInfo(&gorilla)
 
-	//**loop range with Map
+}
 
-	animalsMap := make(map[string]string)
-	animalsMap["dog"] = "charli"
-	animalsMap["horse"] = "pinto"
+// The values defined above in main function to gorilla and dog are useless
+//the entire output is printed based on below 2 functions
+func printInfo(a Animal) {
 
-	for _, animal := range animalsMap {
-		log.Println(animal)
-	}
+	fmt.Println("the animal says", a.Says(), "and has", a.NumberOfLegs(), "legs")
 
-	//if we want to print the animal type and their name
-	for animalType, animal := range animalsMap {
-		log.Println(animalType, animal)
-	}
+}
 
-	//**loop range through string
+//we can either pass the type here or the pointers
+//pointer is best practise by adding * to the type
+func (d *Dog) Says() string {
+	d.name = "diky"
+	return "woof"
+}
 
-	var firstLine = "This is a string"
-	for i, l := range firstLine {
-		log.Println(i, l)
-		//this will not print the letter but the bytes
+// for learning and testing purpose I passed the type here and did not add * but it works
+func (d Dog) NumberOfLegs() int {
+	return 4
+}
 
-		log.Printf("%v\t%#U\t", i, l)
-	}
+func (d *Gorilla) Says() string {
+	return "haha"
+}
 
-	//**range over customer types
-
-	type User struct {
-		FirstName string
-		LastName  string
-		Email     string
-		Age       int
-	}
-
-	var user []User
-	user = append(user, User{"Sudhir", "Phogat", "sudhir@gmail.com", 30})
-	user = append(user, User{"Ram", "Kumar", "ram@gmail.com", 90})
-	user = append(user, User{"Siva", "Mani", "siva@gmail.com", 69})
-
-	for _, u := range user {
-		log.Println(u.FirstName, u.LastName, u.Email, u.Age)
-	}
-
+func (d *Gorilla) NumberOfLegs() int {
+	return 5
 }
