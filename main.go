@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"sort"
 	"time"
 )
 
@@ -107,12 +108,24 @@ func main() {
 	//similar to array but go do not use array so use slice
 	//add[] in front of variable type
 	//it can be int
-	var mySlice []string
+	var mySlice []int
 
-	mySlice = append(mySlice, "Sudhir")
-	mySlice = append(mySlice, "Phogat")
-	mySlice = append(mySlice, "Renu")
+	mySlice = append(mySlice, 2)
+	mySlice = append(mySlice, 1)
+	mySlice = append(mySlice, 3)
+
+	//to find out what functions slice can do wirte "myslice."" after . all functions will appear to select
+	sort.Ints(mySlice)
+
+	mySlice = append(mySlice, 4)
 	log.Println(mySlice)
+
+	//another way of declaring slice
+	numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+	log.Println(numbers)
+	//from a specific range
+	log.Println(numbers[0:2])
 }
 
 //***Type Struct can also be called using a function by passing  "* struct" before the func name
