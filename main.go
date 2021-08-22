@@ -77,6 +77,42 @@ func main() {
 	//****using function instead of direct variable
 	log.Println("The value of myVar is", myVar.printFirstName())
 	log.Println("The value of myVar2 is", myVar2.printFirstName())
+
+	//***//Maps
+	//**right way to assign map
+	//[string] is key type
+	//string,int is value type
+	myMap := make(map[string]string)
+	myMap2 := make(map[string]int)
+
+	//we can define as many key values to the map variable
+	myMap["dog"] = "tommy"
+	myMap2["title"] = 1
+
+	myMap["other-dog"] = "kutta"
+
+	log.Println(myMap["dog"], myMap["other-dog"], myMap2["title"])
+
+	//wrong way to assign map
+	//var myOtherMap map[string]string
+
+	//******we can use map and struct combination******
+	myMap3 := make(map[string]User)
+	//user is defined above in struct example
+	myMap3["user"] = user
+
+	log.Println(myMap3["user"].FirstName, myMap3["user"].LastName)
+
+	//*********slice
+	//similar to array but go do not use array so use slice
+	//add[] in front of variable type
+	//it can be int
+	var mySlice []string
+
+	mySlice = append(mySlice, "Sudhir")
+	mySlice = append(mySlice, "Phogat")
+	mySlice = append(mySlice, "Renu")
+	log.Println(mySlice)
 }
 
 //***Type Struct can also be called using a function by passing  "* struct" before the func name
