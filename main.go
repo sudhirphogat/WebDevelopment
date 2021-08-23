@@ -1,58 +1,73 @@
 package main
 
 import (
-	"WebDevelopment/helpers"
+	"encoding/json"
 	"fmt"
 	"log"
 )
 
-//the random number will be below numPool
-const numPool = 10
-
-//creating packages
-// in the terminal create a module by running the command "go mod init github.com/<yourid>/<modulename>"
-//yourid just like mine "sudhirphogat" and modulename anythink like you want
-
-//go.mod file is created with "module go mod init github.com/<yourid>/<modulename>""
-func main() {
-
-	var myVar helpers.SomeType
-	myVar.TypeName = "This is taken from another folder"
-
-	fmt.Println(myVar.TypeName)
-
-	//***Channels
-	//*** channels are useful when we have more than many packages inside project
-
-	//we can pass value to fucntions and get return value from them through channels
-	//initialise the channel ** similar to creating MAP
-	intChan := make(chan int)
-
-	//close the channel as a good practise anyhow it is not required.
-	//it is similar to closing a sql connection or file after it is used
-	defer close(intChan)
-
-	//concurrent operation by sending it as routine by using go
-	go CalculateValue(intChan)
-
-	//get the response from the channel after sending from above routine
-	//<- is what is assigned to intchan
-	num := <-intChan
-
-	log.Println(num)
-	//When running the program always the result is same 1.
-	//To fix this we need to make the random number psudo in helper.
-
+//****JSON
+//*** if we do not know the fields in the struct or Json that there is another method that is not covered here
+//use `` in ~ button and not '' in " " button.
+//json:"name used by json" to identify the value of variable
+type Person struct {
+	FirstName string `json:"first_name"`
+	LastName  string `jsaon:"last_name"`
+	HairColor string `json:"hair_color"`
+	HasDog    bool   `json:"has_dog"`
 }
 
-//creating function for the channal to create random number
-//this will accept a channel value
-//Random value will be created in Helper folder under helpers
-func CalculateValue(intChan chan int) {
+func main() {
+	myJson := `
+[
+	{
+		"first_name":"Sudhir",
+		"last_name":"Phogat",
+		"hair_color":"Black",
+		"has_dog":true
+	},
+	{
+		"first_name":"Riaan",
+		"last_name":"Phogat",
+		"hair_color":"Brown",
+		"has_dog":false
+	}
+]`
+	//Json uses marshalled and unmarshalled
 
-	//Function is called from helper and value is passed which is declared in package scope above
-	randomNumber := helpers.RandomNumber(numPool)
-	//pass the random number through channel. where intChan is the channel we created
-	intChan <- randomNumber
+	//creating struct from json
+	var unmarshalled []Person
 
+	err := json.Unmarshal([]byte(myJson), &unmarshalled)
+	if err != nil {
+		log.Println("Error Unmarshalled Json", err)
+	}
+	log.Printf("unmarshalled: %v", unmarshalled)
+
+	//creating Json from struct
+
+	var mySlice []Person
+
+	var m1 Person
+	m1.FirstName = "Renu"
+	m1.LastName = "Kadyan"
+	m1.HairColor = "Black"
+	m1.HasDog = true
+
+	var m2 Person
+	m2.FirstName = "Renu"
+	m2.LastName = ""
+	m2.HairColor = "Black"
+	m2.HasDog = true
+
+	mySlice = append(mySlice, m1)
+	mySlice = append(mySlice, m2)
+	//instead of json.marshall I can give marshalintend so that we can product neat output
+	//but in production we use marshall
+	//newJson, err := json.Marshal(mySlice)
+	newJson, err := json.MarshalIndent(mySlice, "", "   ")
+	if err != nil {
+		log.Println("Error in creating Json", err)
+	}
+	fmt.Println(string(newJson))
 }
