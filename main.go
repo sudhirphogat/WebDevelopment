@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 )
@@ -14,49 +13,13 @@ const portNumber = ":8080"
 //we can move the responsewriter outside the main funciton
 
 //in case there are mulitple pages then
-
-func Home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "This is a home Page")
-
-}
-
-//About is called when /about is called
-func About(w http.ResponseWriter, r *http.Request) {
-	sum := addValues(3, 5)
-	_, _ = fmt.Fprintf(w, fmt.Sprintf("The total add values is %d", sum))
-}
-
-// simple example to return the sum
-func addValues(x, y int) int {
-	return x + y
-}
-
-func Divide(w http.ResponseWriter, r *http.Request) {
-	f, err := divideValues(100, 0)
-	if err != nil {
-		fmt.Fprintf(w, "Cannot print by 0")
-		return
-	}
-
-	fmt.Fprintf(w, fmt.Sprintf("the divide answer is %f", f))
-
-}
-
-func divideValues(x, y float32) (float32, error) {
-	if y <= 0 {
-		err := errors.New("Cannot divide by Zero")
-		return 0, err
-	}
-	result := x / y
-	return result, nil
-}
+// moved func home and about and render to handler
 
 func main() {
 
 	//***the handlefunc should be called before listenandserve else it will show the 404 error
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/about", About)
-	http.HandleFunc("/divide", Divide)
 
 	//Handle func is used to return response on request
 	//http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
