@@ -1,30 +1,21 @@
 package main
 
 import (
-	"errors"
-	"log"
+	"fmt"
+	"net/http"
 )
 
 func main() {
+	//Handle func is used to return response on request
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		n, err := fmt.Fprintf(w, "Hello, World")
+		//in case there is an error
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	result, err := divide(6, 5)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	log.Println(result)
-
-}
-
-func divide(x, y float32) (float32, error) {
-	var result float32
-
-	if y == 0 {
-		return result, errors.New("number cannot be divided by 0")
-
-	}
-
-	result = x / y
-	return result, nil
+		//Sprintf returns string where as n is an integer and cannot we writtern in println.
+		fmt.Printf("Number of Byte writtern are: %d", n)
+	})
+	_ = http.ListenAndServe(":8080", nil)
 }
