@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/sudhirphogat/WebDevelopment/pkg/handlers"
 )
 
 //var can be changed so we define it as constant
@@ -18,8 +20,8 @@ const portNumber = ":8080"
 func main() {
 
 	//***the handlefunc should be called before listenandserve else it will show the 404 error
-	http.HandleFunc("/", Home)
-	http.HandleFunc("/about", About)
+	http.HandleFunc("/", handlers.Home)
+	http.HandleFunc("/about", handlers.About)
 
 	//Handle func is used to return response on request
 	//http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
