@@ -38,7 +38,7 @@ func main() {
 	//in case I want to change the port number every time
 	//_ = http.ListenAndServe(":8080", nil)
 
-	fmt.Printf("Application starting at port number %s", portNumber)
+	fmt.Printf("Application starting at port number %s\n", portNumber)
 	_ = http.ListenAndServe(portNumber, nil)
 
 }
