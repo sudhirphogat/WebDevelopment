@@ -37,6 +37,7 @@ func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, e
 	for _, page := range pages {
 		name := filepath.Base(page)
 		fmt.Println("page is currently", page)
+
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return mycache, err
@@ -48,7 +49,7 @@ func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, e
 		}
 
 		if len(matches) > 0 {
-			ts, err := ts.ParseGlob("./templates/*.layout.html")
+			ts, err = ts.ParseGlob("./templates/*.layout.html")
 			if err != nil {
 				return mycache, err
 			}
