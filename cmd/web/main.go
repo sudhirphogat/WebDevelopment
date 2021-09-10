@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/sudhirphogat/WebDevelopment/pkg/config"
 	"github.com/sudhirphogat/WebDevelopment/pkg/handlers"
+	"github.com/sudhirphogat/WebDevelopment/pkg/render"
 )
 
 //var can be changed so we define it as constant
@@ -18,6 +21,15 @@ const portNumber = ":8080"
 // moved func home and about and render to handler
 
 func main() {
+
+	var app config.AppConfig
+
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("Cannot create template")
+	}
+
+	app.TemplateCache = tc
 
 	//***the handlefunc should be called before listenandserve else it will show the 404 error
 	http.HandleFunc("/", handlers.Home)
