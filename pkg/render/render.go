@@ -1,32 +1,59 @@
 package render
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"path/filepath"
 )
 
+//****Cahche is not a better way as this is rendering all the pages and storing it
+// this might impact once the traffic is high or n number of pages
 var functions = template.FuncMap{}
 
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
-	_, err := RenderTemplateTest(w)
+	//*** This is not required as I changed the nanem of RenderTemplateTest to CreateTemplateCache
+	//we need to handle it differently as we want to show the data in portal
+	//Currently using this code we only check that func is working but no data in the frontend
+	//_, err := RenderTemplateTest(w)
+	//if err != nil {
+	//	fmt.Println("error getting template cache", err)
+	//}
+
+	tc, err := CreateTemplateCache()
 	if err != nil {
-		fmt.Println("error getting template cache", err)
+		log.Fatal(err)
 	}
 
-	parshedTemplate, _ := template.ParseFiles("./templates/" + tmpl)
-
-	err = parshedTemplate.Execute(w, nil)
-	if err != nil {
-		fmt.Println("error parsing template", err)
-		return
+	t, ok := tc[tmpl]
+	if !ok {
+		log.Fatal(err)
 	}
+
+	buf := new(bytes.Buffer)
+
+	_ = t.Execute(buf, nil)
+
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		fmt.Println("Error writing template", err)
+	}
+
+	//*** below code is good in case we do not have a layout template as it direcly parses the template
+	//parshedTemplate, _ := template.ParseFiles("./templates/" + tmpl)
+
+	//err = parshedTemplate.Execute(w, nil)
+	//if err != nil {
+	//	fmt.Println("error parsing template", err)
+	//	return
+	//}
 
 }
 
-func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, error) {
+func CreateTemplateCache() (map[string]*template.Template, error) {
 	mycache := map[string]*template.Template{}
 
 	pages, err := filepath.Glob("./templates/*.page.html")
@@ -36,7 +63,7 @@ func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, e
 
 	for _, page := range pages {
 		name := filepath.Base(page)
-		fmt.Println("page is currently", page)
+		//fmt.Println("page is currently", page)
 
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
