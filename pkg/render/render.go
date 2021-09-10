@@ -7,13 +7,23 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/sudhirphogat/WebDevelopment/pkg/config"
 )
 
-//****Cahche is not a better way as this is rendering all the pages and storing it
-// this might impact once the traffic is high or n number of pages
 var functions = template.FuncMap{}
 
+var app *config.AppConfig
+
+//sets config to template package
+func NewTemplates(a *config.AppConfig) {
+	app = a
+}
+
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
+
+	//We will get the cache from the app
+	tc := app.TemplateCache
 
 	//*** This is not required as I changed the nanem of RenderTemplateTest to CreateTemplateCache
 	//we need to handle it differently as we want to show the data in portal
@@ -23,21 +33,23 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	//	fmt.Println("error getting template cache", err)
 	//}
 
-	tc, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
-	}
+	//****Cahche is not a better way as this is rendering all the pages and storing it
+	// this might impact once the traffic is high or n number of pages
+	//tc, err := CreateTemplateCache()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("Template cannot be created from template cache")
 	}
 
 	buf := new(bytes.Buffer)
 
 	_ = t.Execute(buf, nil)
 
-	_, err = buf.WriteTo(w)
+	_, err := buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("Error writing template", err)
 	}

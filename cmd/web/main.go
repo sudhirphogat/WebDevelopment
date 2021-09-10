@@ -31,6 +31,8 @@ func main() {
 
 	app.TemplateCache = tc
 
+	render.NewTemplates(&app)
+
 	//***the handlefunc should be called before listenandserve else it will show the 404 error
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
